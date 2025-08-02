@@ -181,12 +181,17 @@
                     <option value="binary">Binary</option>
                     <option value="morse">Morse Code</option>
                     <option value="braille">Braille</option>
+                    <option value="reverse">Reverse Text</option>
                     <option value="base64">Base64</option>
                     <option value="hex">Hexadecimal</option>
                     <option value="url">URL Encoding</option>
                     <option value="ascii">ASCII Codes</option>
                     <option value="rot13">ROT13</option>
-                    <option value="reverse">Reverse Text</option>
+                    <option value="emoji">Emoji Replace</option>
+                    <option value="random-letter">Random Letter Prefix</option>
+                    <option value="leetspeak">Leet Speak</option>
+                    <option value="upsidedown">Upside Down</option>
+                    <option value="bubble">Bubble Text</option>
                 </select>
             </div>
 
@@ -200,6 +205,7 @@
             <div class="controls">
                 <button onclick="convertText()">Convert</button>
                 <button onclick="interchangeBoxes()">↕ Interchange</button>
+                <button onclick="clearInput()">Clear Input</button>
             </div>
 
             <div class="input-group">
@@ -208,6 +214,8 @@
                 
                 <div class="controls">
                     <button onclick="copyResult()">Copy Result</button>
+                    <button onclick="decryptToInput()">Decrypt to Input</button>
+                    <button onclick="clearOutput()">Clear Output</button>
                 </div>
             </div>
         </div>
@@ -321,6 +329,152 @@
             reverse: {
                 encode: text => text.split('').reverse().join(''),
                 decode: text => text.split('').reverse().join('')
+            },
+            emoji: {
+                encode: text => {
+                    const emojiMap = {
+                        // Emotions & People
+                        'happy': '😊', 'sad': '😢', 'love': '❤️', 'heart': '❤️', 'angry': '😠', 'cry': '😭',
+                        'laugh': '😂', 'smile': '😄', 'wink': '😉', 'kiss': '😘', 'cool': '😎', 'think': '🤔',
+                        'sleep': '😴', 'sick': '🤒', 'crazy': '🤪', 'excited': '🤩', 'surprised': '😲', 'worried': '😟',
+                        'hello': '👋', 'bye': '👋', 'thanks': '🙏', 'pray': '🙏', 'clap': '👏', 'thumbs': '👍',
+                        'good': '👍', 'bad': '👎', 'ok': '👌', 'peace': '✌️', 'strong': '💪', 'point': '👉',
+                        
+                        // Nature & Weather
+                        'sun': '☀️', 'moon': '🌙', 'star': '⭐', 'cloud': '☁️', 'rain': '🌧️', 'snow': '❄️',
+                        'lightning': '⚡', 'rainbow': '🌈', 'wind': '💨', 'tornado': '🌪️', 'fire': '🔥', 'water': '💧',
+                        'ocean': '🌊', 'earth': '🌍', 'mountain': '⛰️', 'volcano': '🌋', 'desert': '🏜️', 'beach': '🏖️',
+                        'tree': '🌳', 'palm': '🌴', 'forest': '🌲', 'flower': '🌸', 'rose': '🌹', 'tulip': '🌷',
+                        'sunflower': '🌻', 'blossom': '🌺', 'leaf': '🍃', 'grass': '🌱', 'bamboo': '🎋', 'cactus': '🌵',
+                        
+                        // Animals
+                        'cat': '🐱', 'dog': '🐶', 'mouse': '🐭', 'hamster': '🐹', 'rabbit': '🐰', 'fox': '🦊',
+                        'bear': '🐻', 'panda': '🐼', 'koala': '🐨', 'tiger': '🐯', 'lion': '🦁', 'cow': '🐮',
+                        'pig': '🐷', 'monkey': '🐵', 'chicken': '🐔', 'penguin': '🐧', 'bird': '🐦', 'eagle': '🦅',
+                        'duck': '🦆', 'owl': '🦉', 'bat': '🦇', 'wolf': '🐺', 'horse': '🐴', 'unicorn': '🦄',
+                        'bee': '🐝', 'bug': '🐛', 'butterfly': '🦋', 'snail': '🐌', 'spider': '🕷️', 'ant': '🐜',
+                        'fish': '🐟', 'shark': '🦈', 'whale': '🐋', 'dolphin': '🐬', 'octopus': '🐙', 'crab': '🦀',
+                        'snake': '🐍', 'turtle': '🐢', 'frog': '🐸', 'dragon': '🐉', 'dinosaur': '🦕',
+                        
+                        // Food & Drinks
+                        'food': '🍕', 'pizza': '🍕', 'burger': '🍔', 'hotdog': '🌭', 'sandwich': '🥪', 'taco': '🌮',
+                        'burrito': '🌯', 'salad': '🥗', 'soup': '🍲', 'pasta': '🍝', 'rice': '🍚', 'curry': '🍛',
+                        'sushi': '🍣', 'fish': '🐟', 'meat': '🥩', 'chicken': '🍗', 'bacon': '🥓', 'egg': '🍳',
+                        'bread': '🍞', 'croissant': '🥐', 'bagel': '🥯', 'pretzel': '🥨', 'cheese': '🧀', 'milk': '🥛',
+                        'coffee': '☕', 'tea': '🍵', 'beer': '🍺', 'wine': '🍷', 'cocktail': '🍸', 'juice': '🧃',
+                        'cake': '🎂', 'cupcake': '🧁', 'pie': '🥧', 'cookie': '🍪', 'chocolate': '🍫', 'candy': '🍬',
+                        'ice': '🍦', 'donut': '🍩', 'honey': '🍯', 'apple': '🍎', 'banana': '🍌', 'orange': '🍊',
+                        'lemon': '🍋', 'watermelon': '🍉', 'grapes': '🍇', 'strawberry': '🍓', 'cherry': '🍒', 'peach': '🍑',
+                        'pineapple': '🍍', 'coconut': '🥥', 'tomato': '🍅', 'carrot': '🥕', 'corn': '🌽', 'potato': '🥔',
+                        
+                        // Travel & Places
+                        'car': '🚗', 'bus': '🚌', 'train': '🚂', 'plane': '✈️', 'ship': '🚢', 'boat': '⛵', 'bike': '🚴',
+                        'taxi': '🚕', 'truck': '🚛', 'ambulance': '🚑', 'police': '🚓', 'fire': '🚒', 'rocket': '🚀',
+                        'helicopter': '🚁', 'metro': '🚇', 'tram': '🚊', 'scooter': '🛴', 'skateboard': '🛹',
+                        'home': '🏠', 'house': '🏡', 'building': '🏢', 'school': '🏫', 'hospital': '🏥', 'bank': '🏦',
+                        'hotel': '🏨', 'church': '⛪', 'mosque': '🕌', 'temple': '🛕', 'castle': '🏰', 'tower': '🗼',
+                        'bridge': '🌉', 'tent': '⛺', 'park': '🏞️', 'stadium': '🏟️', 'city': '🏙️', 'sunrise': '🌅',
+                        'sunset': '🌇', 'night': '🌃', 'camp': '🏕️', 'factory': '🏭', 'office': '🏢',
+                        
+                        // Objects & Technology
+                        'phone': '📱', 'computer': '💻', 'laptop': '💻', 'keyboard': '⌨️', 'mouse': '🖱️', 'screen': '💻',
+                        'camera': '📷', 'video': '📹', 'tv': '📺', 'radio': '📻', 'headphone': '🎧', 'speaker': '🔊',
+                        'microphone': '🎤', 'watch': '⌚', 'clock': '🕐', 'alarm': '⏰', 'timer': '⏲️', 'calendar': '📅',
+                        'book': '📚', 'notebook': '📓', 'pen': '✒️', 'pencil': '✏️', 'brush': '🖌️', 'crayon': '🖍️',
+                        'paper': '📄', 'envelope': '✉️', 'package': '📦', 'gift': '🎁', 'balloon': '🎈', 'flag': '🏁',
+                        'key': '🔑', 'lock': '🔒', 'unlock': '🔓', 'door': '🚪', 'window': '🪟', 'mirror': '🪞',
+                        'light': '💡', 'candle': '🕯️', 'flashlight': '🔦', 'battery': '🔋', 'plug': '🔌', 'wire': '🔌',
+                        'tool': '🔧', 'hammer': '🔨', 'knife': '🔪', 'gun': '🔫', 'bomb': '💣', 'sword': '⚔️',
+                        'shield': '🛡️', 'bow': '🏹', 'magic': '🪄', 'crystal': '🔮', 'gem': '💎', 'ring': '💍',
+                        'crown': '👑', 'hat': '👒', 'glasses': '👓', 'sunglasses': '🕶️', 'mask': '😷', 'shoe': '👟',
+                        'boot': '👢', 'shirt': '👕', 'dress': '👗', 'coat': '🧥', 'bag': '👜', 'wallet': '👛',
+                        
+                        // Activities & Sports
+                        'music': '🎵', 'song': '🎶', 'dance': '💃', 'party': '🎉', 'celebration': '🎊', 'game': '🎮',
+                        'sport': '⚽', 'football': '🏈', 'basketball': '🏀', 'tennis': '🎾', 'baseball': '⚾', 'golf': '⛳',
+                        'swimming': '🏊', 'running': '🏃', 'cycling': '🚴', 'climbing': '🧗', 'skiing': '⛷️', 'surfing': '🏄',
+                        'fishing': '🎣', 'hunting': '🏹', 'camping': '⛺', 'hiking': '🥾', 'art': '🎨', 'paint': '🎨',
+                        'draw': '✏️', 'write': '✍️', 'read': '📖', 'study': '📚', 'work': '💼', 'job': '👔',
+                        
+                        // Symbols & Others
+                        'money': '💰', 'coin': '🪙', 'dollar': '💵', 'credit': '💳', 'chart': '📈', 'graph': '📊',
+                        'trophy': '🏆', 'medal': '🥇', 'award': '🏅', 'target': '🎯', 'dice': '🎲', 'puzzle': '🧩',
+                        'magic': '✨', 'star': '⭐', 'boom': '💥', 'splash': '💦', 'sweat': '💦', 'drop': '💧',
+                        'bubble': '🫧', 'smoke': '💨', 'speed': '💨', 'hot': '🔥', 'cold': '❄️', 'warm': '☀️',
+                        'yes': '✅', 'no': '❌', 'stop': '🛑', 'go': '🟢', 'warning': '⚠️', 'danger': '☢️',
+                        'help': '🆘', 'info': 'ℹ️', 'question': '❓', 'exclamation': '❗', 'check': '✔️', 'cross': '❌',
+                        'plus': '➕', 'minus': '➖', 'multiply': '✖️', 'divide': '➗', 'equal': '🟰', 'percent': '%',
+                        'new': '🆕', 'free': '🆓', 'cool': '🆒', 'hot': '🆙', 'top': '🔝', 'end': '🔚'
+                    };
+                    return text.toLowerCase().split(' ').map(word => {
+                        const cleanWord = word.replace(/[^\w]/g, '');
+                        return emojiMap[cleanWord] || word;
+                    }).join(' ');
+                },
+                decode: text => text // Simple fallback
+            },
+            'random-letter': {
+                encode: text => {
+                    const letters = 'abcdefghijklmnopqrstuvwxyz';
+                    return text.split(' ').map(word => {
+                        if (word.trim()) {
+                            const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+                            return randomLetter + word;
+                        }
+                        return word;
+                    }).join(' ');
+                },
+                decode: text => text.split(' ').map(word => word.slice(1)).join(' ')
+            },
+            leetspeak: {
+                encode: text => {
+                    const leetMap = {
+                        'a': '4', 'e': '3', 'i': '1', 'o': '0', 's': '5', 't': '7', 'l': '1'
+                    };
+                    return text.toLowerCase().split('').map(char => leetMap[char] || char).join('');
+                },
+                decode: text => {
+                    const reverseLeet = {
+                        '4': 'a', '3': 'e', '1': 'i', '0': 'o', '5': 's', '7': 't'
+                    };
+                    return text.split('').map(char => reverseLeet[char] || char).join('');
+                }
+            },
+            upsidedown: {
+                encode: text => {
+                    const upsideMap = {
+                        'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ', 'g': 'ƃ',
+                        'h': 'ɥ', 'i': 'ᴉ', 'j': 'ɾ', 'k': 'ʞ', 'l': 'l', 'm': 'ɯ', 'n': 'u',
+                        'o': 'o', 'p': 'd', 'q': 'b', 'r': 'ɹ', 's': 's', 't': 'ʇ', 'u': 'n',
+                        'v': 'ʌ', 'w': 'ʍ', 'x': 'x', 'y': 'ʎ', 'z': 'z', '?': '¿', '!': '¡'
+                    };
+                    return text.toLowerCase().split('').map(char => upsideMap[char] || char).reverse().join('');
+                },
+                decode: text => text // Simplified decode
+            },
+            bubble: {
+                encode: text => {
+                    const bubbleMap = {
+                        'a': 'ⓐ', 'b': 'ⓑ', 'c': 'ⓒ', 'd': 'ⓓ', 'e': 'ⓔ', 'f': 'ⓕ', 'g': 'ⓖ',
+                        'h': 'ⓗ', 'i': 'ⓘ', 'j': 'ⓙ', 'k': 'ⓚ', 'l': 'ⓛ', 'm': 'ⓜ', 'n': 'ⓝ',
+                        'o': 'ⓞ', 'p': 'ⓟ', 'q': 'ⓠ', 'r': 'ⓡ', 's': 'ⓢ', 't': 'ⓣ', 'u': 'ⓤ',
+                        'v': 'ⓥ', 'w': 'ⓦ', 'x': 'ⓧ', 'y': 'ⓨ', 'z': 'ⓩ',
+                        '0': '⓪', '1': '①', '2': '②', '3': '③', '4': '④', '5': '⑤',
+                        '6': '⑥', '7': '⑦', '8': '⑧', '9': '⑨'
+                    };
+                    return text.toLowerCase().split('').map(char => bubbleMap[char] || char).join('');
+                },
+                decode: text => {
+                    const reverseBubble = {
+                        'ⓐ': 'a', 'ⓑ': 'b', 'ⓒ': 'c', 'ⓓ': 'd', 'ⓔ': 'e', 'ⓕ': 'f', 'ⓖ': 'g',
+                        'ⓗ': 'h', 'ⓘ': 'i', 'ⓙ': 'j', 'ⓚ': 'k', 'ⓛ': 'l', 'ⓜ': 'm', 'ⓝ': 'n',
+                        'ⓞ': 'o', 'ⓟ': 'p', 'ⓠ': 'q', 'ⓡ': 'r', 'ⓢ': 's', 'ⓣ': 't', 'ⓤ': 'u',
+                        'ⓥ': 'v', 'ⓦ': 'w', 'ⓧ': 'x', 'ⓨ': 'y', 'ⓩ': 'z',
+                        '⓪': '0', '①': '1', '②': '2', '③': '3', '④': '4', '⑤': '5',
+                        '⑥': '6', '⑦': '7', '⑧': '8', '⑨': '9'
+                    };
+                    return text.split('').map(char => reverseBubble[char] || char).join('');
+                }
             }
         };
 
@@ -360,6 +514,23 @@
             }
         }
 
+        function decryptToInput() {
+            const output = document.getElementById('output-text').value;
+            const encodingType = document.getElementById('encoding-type').value;
+            const input = document.getElementById('input-text');
+            
+            if (output.length === 0) {
+                input.value = '';
+                return;
+            }
+            
+            try {
+                input.value = encoders[encodingType].decode(output);
+            } catch (error) {
+                input.value = 'Decode error';
+            }
+        }
+
         function copyResult() {
             const output = document.getElementById('output-text');
             output.select();
@@ -372,6 +543,14 @@
             setTimeout(() => {
                 button.textContent = originalText;
             }, 1000);
+        }
+
+        function clearInput() {
+            document.getElementById('input-text').value = '';
+        }
+
+        function clearOutput() {
+            document.getElementById('output-text').value = '';
         }
 
         function interchangeBoxes() {
