@@ -1,568 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Converter</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #000000;
-            --border-color: #cccccc;
-            --button-bg: #f5f5f5;
-            --button-hover: #e0e0e0;
-        }
-
-        [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --text-color: #ffffff;
-            --border-color: #444444;
-            --button-bg: #2a2a2a;
-            --button-hover: #3a3a3a;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .theme-toggle {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .theme-toggle:hover {
-            background-color: var(--button-hover);
-        }
-
-        h1 {
-            font-size: 24px;
-            font-weight: 300;
-            margin-bottom: 5px;
-        }
-
-        .subtitle {
-            font-size: 14px;
-            color: var(--text-color);
-            opacity: 0.7;
-        }
-
-        .converter-section {
-            margin-bottom: 30px;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 14px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            resize: vertical;
-            transition: border-color 0.3s ease;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--text-color);
-        }
-
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-size: 14px;
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-            flex-wrap: wrap;
-        }
-
-        button {
-            padding: 10px 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background-color: var(--button-bg);
-            color: var(--text-color);
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            background-color: var(--button-hover);
-        }
-
-
-
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-            font-size: 14px;
-            opacity: 0.7;
-        }
-
-        @media (max-width: 600px) {
-            .controls {
-                flex-direction: column;
-            }
-            
-            .encryption-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Text Converter</title>
+<style>
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  :root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --border-color: #cccccc;
+    --button-bg: #f5f5f5;
+    --button-hover: #e0e0e0;
+  }
+  [data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --border-color: #444444;
+    --button-bg: #2a2a2a;
+    --button-hover: #3a3a3a;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+  .container { max-width: 800px; margin: 0 auto; }
+  .header { text-align: center; margin-bottom: 30px; position: relative; }
+  .theme-toggle {
+    position: absolute; top: 0; right: 0;
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+  .theme-toggle:hover { background-color: var(--button-hover); }
+  h1 { font-size: 24px; font-weight: 300; margin-bottom: 5px; }
+  .subtitle { font-size: 14px; color: var(--text-color); opacity: 0.7; }
+  .converter-section { margin-bottom: 30px; }
+  .input-group { margin-bottom: 15px; }
+  label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: 500; }
+  textarea {
+    width: 100%; min-height: 120px; padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 14px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    resize: vertical;
+    transition: border-color 0.3s ease;
+  }
+  textarea:focus { outline: none; border-color: var(--text-color); }
+  select { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-color); color: var(--text-color); font-size: 14px; }
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+  }
+  button {
+    padding: 10px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+  button:hover { background-color: var(--button-hover); }
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    font-size: 14px;
+    opacity: 0.7;
+  }
+  @media (max-width: 600px) {
+    .controls { flex-direction: column; }
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
-            <h1>Text Converter</h1>
-            <p class="subtitle">Convert text to various encodings</p>
-        </div>
+<div class="container">
+  <div class="header">
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    <h1>Text Converter</h1>
+    <p class="subtitle">Convert text to various encodings</p>
+  </div>
 
-        <div class="converter-section">
-            <div class="input-group">
-                <label for="encoding-type">Encoding Type:</label>
-                <select id="encoding-type">
-                    <option value="binary">Binary</option>
-                    <option value="morse">Morse Code</option>
-                    <option value="braille">Braille</option>
-                    <option value="reverse">Reverse Text</option>
-                    <option value="base64">Base64</option>
-                    <option value="hex">Hexadecimal</option>
-                    <option value="url">URL Encoding</option>
-                    <option value="ascii">ASCII Codes</option>
-                    <option value="rot13">ROT13</option>
-                    <option value="emoji">Emoji Replace</option>
-                    <option value="random-letter">Random Letter Prefix</option>
-                    <option value="leetspeak">Leet Speak</option>
-                    <option value="upsidedown">Upside Down</option>
-                    <option value="bubble">Bubble Text</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label for="input-text">Input Text:</label>
-                <textarea id="input-text" placeholder="Enter text to convert (up to 200 characters)..." maxlength="200"></textarea>
-                
-
-            </div>
-
-            <div class="controls">
-                <button onclick="convertText()">Convert</button>
-                <button onclick="interchangeBoxes()">↕ Interchange</button>
-                <button onclick="clearInput()">Clear Input</button>
-            </div>
-
-            <div class="input-group">
-                <label for="output-text">Output Text:</label>
-                <textarea id="output-text" placeholder="Converted text will appear here..." readonly></textarea>
-                
-                <div class="controls">
-                    <button onclick="copyResult()">Copy Result</button>
-                    <button onclick="decryptToInput()">Decrypt to Input</button>
-                    <button onclick="clearOutput()">Clear Output</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer">
-            Made with ❤️ by sauravhhh
-        </div>
+  <div class="converter-section">
+    <div class="input-group">
+      <label for="encoding-type">Encoding Type:</label>
+      <select id="encoding-type">
+        <option value="binary">Binary</option>
+        <option value="morse">Morse Code</option>
+        <option value="braille">Braille</option>
+        <option value="reverse">Reverse Text</option>
+        <option value="upsidedown">Upside Down</option>
+        <option value="base64">Base64</option>
+        <option value="hex">Hexadecimal</option>
+        <option value="url">URL Encoding</option>
+        <option value="ascii">ASCII Codes</option>
+        <option value="rot13">ROT13</option>
+        <option value="emoji">Emoji Replace</option>
+        <option value="random-letter">Random Letter Prefix</option>
+        <option value="leetspeak">Leet Speak</option>
+        <option value="bubble">Bubble Text</option>
+      </select>
     </div>
 
-    <script>
-        // Theme toggle functionality
-        function toggleTheme() {
-            const body = document.body;
-            const themeToggle = document.querySelector('.theme-toggle');
-            
-            if (body.hasAttribute('data-theme')) {
-                body.removeAttribute('data-theme');
-                themeToggle.textContent = '🌙';
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                themeToggle.textContent = '☀️';
-            }
-        }
+    <div class="input-group">
+      <label for="input-text">Input Text:</label>
+      <textarea id="input-text" placeholder="Enter text to convert (up to 200 characters)..." maxlength="200"></textarea>
+    </div>
 
-        // No encryption functionality needed
+    <div class="controls">
+      <button onclick="convertText()">Convert</button>
+      <button onclick="interchangeBoxes()">↕ Interchange</button>
+      <button onclick="clearInput()">Clear Input</button>
+    </div>
 
-        // Encoding functions
-        const encoders = {
-            binary: {
-                encode: text => text.split('').map(char => char.charCodeAt(0).toString(2).padStart(8, '0')).join(' '),
-                decode: binary => binary.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('')
-            },
-            morse: {
-                encode: text => {
-                    const morseCode = {
-                        'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
-                        'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
-                        'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
-                        'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
-                        'Y': '-.--', 'Z': '--..', '0': '-----', '1': '.----', '2': '..---',
-                        '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...',
-                        '8': '---..', '9': '----.', ' ': '/'
-                    };
-                    return text.toUpperCase().split('').map(char => morseCode[char] || char).join(' ');
-                },
-                decode: morse => {
-                    const morseReverse = {
-                        '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E', '..-.': 'F',
-                        '--.': 'G', '....': 'H', '..': 'I', '.---': 'J', '-.-': 'K', '.-..': 'L',
-                        '--': 'M', '-.': 'N', '---': 'O', '.--.': 'P', '--.-': 'Q', '.-.': 'R',
-                        '...': 'S', '-': 'T', '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X',
-                        '-.--': 'Y', '--..': 'Z', '-----': '0', '.----': '1', '..---': '2',
-                        '...--': '3', '....-': '4', '.....': '5', '-....': '6', '--...': '7',
-                        '---..': '8', '----.': '9', '/': ' '
-                    };
-                    return morse.split(' ').map(code => morseReverse[code] || code).join('');
-                }
-            },
-            braille: {
-                encode: text => {
-                    const brailleMap = {
-                        'a': '⠁', 'b': '⠃', 'c': '⠉', 'd': '⠙', 'e': '⠑', 'f': '⠋', 'g': '⠛',
-                        'h': '⠓', 'i': '⠊', 'j': '⠚', 'k': '⠅', 'l': '⠇', 'm': '⠍', 'n': '⠝',
-                        'o': '⠕', 'p': '⠏', 'q': '⠟', 'r': '⠗', 's': '⠎', 't': '⠞', 'u': '⠥',
-                        'v': '⠧', 'w': '⠺', 'x': '⠭', 'y': '⠽', 'z': '⠵', ' ': '⠀'
-                    };
-                    return text.toLowerCase().split('').map(char => brailleMap[char] || char).join('');
-                },
-                decode: braille => {
-                    const brailleReverse = {
-                        '⠁': 'a', '⠃': 'b', '⠉': 'c', '⠙': 'd', '⠑': 'e', '⠋': 'f', '⠛': 'g',
-                        '⠓': 'h', '⠊': 'i', '⠚': 'j', '⠅': 'k', '⠇': 'l', '⠍': 'm', '⠝': 'n',
-                        '⠕': 'o', '⠏': 'p', '⠟': 'q', '⠗': 'r', '⠎': 's', '⠞': 't', '⠥': 'u',
-                        '⠧': 'v', '⠺': 'w', '⠭': 'x', '⠽': 'y', '⠵': 'z', '⠀': ' '
-                    };
-                    return braille.split('').map(char => brailleReverse[char] || char).join('');
-                }
-            },
-            base64: {
-                encode: text => btoa(text),
-                decode: base64 => {
-                    try {
-                        return atob(base64);
-                    } catch {
-                        return 'Invalid Base64';
-                    }
-                }
-            },
-            hex: {
-                encode: text => text.split('').map(char => char.charCodeAt(0).toString(16).padStart(2, '0')).join(' '),
-                decode: hex => hex.split(' ').map(h => String.fromCharCode(parseInt(h, 16))).join('')
-            },
-            url: {
-                encode: text => encodeURIComponent(text),
-                decode: url => decodeURIComponent(url)
-            },
-            ascii: {
-                encode: text => text.split('').map(char => char.charCodeAt(0)).join(' '),
-                decode: ascii => ascii.split(' ').map(code => String.fromCharCode(parseInt(code))).join('')
-            },
-            rot13: {
-                encode: text => text.replace(/[a-zA-Z]/g, char => {
-                    const start = char <= 'Z' ? 65 : 97;
-                    return String.fromCharCode(((char.charCodeAt(0) - start + 13) % 26) + start);
-                }),
-                decode: text => text.replace(/[a-zA-Z]/g, char => {
-                    const start = char <= 'Z' ? 65 : 97;
-                    return String.fromCharCode(((char.charCodeAt(0) - start + 13) % 26) + start);
-                })
-            },
-            reverse: {
-                encode: text => text.split('').reverse().join(''),
-                decode: text => text.split('').reverse().join('')
-            },
-            emoji: {
-                encode: text => {
-                    const emojiMap = {
-                        // Emotions & People
-                        'happy': '😊', 'sad': '😢', 'love': '❤️', 'heart': '❤️', 'angry': '😠', 'cry': '😭',
-                        'laugh': '😂', 'smile': '😄', 'wink': '😉', 'kiss': '😘', 'cool': '😎', 'think': '🤔',
-                        'sleep': '😴', 'sick': '🤒', 'crazy': '🤪', 'excited': '🤩', 'surprised': '😲', 'worried': '😟',
-                        'hello': '👋', 'bye': '👋', 'thanks': '🙏', 'pray': '🙏', 'clap': '👏', 'thumbs': '👍',
-                        'good': '👍', 'bad': '👎', 'ok': '👌', 'peace': '✌️', 'strong': '💪', 'point': '👉',
-                        
-                        // Nature & Weather
-                        'sun': '☀️', 'moon': '🌙', 'star': '⭐', 'cloud': '☁️', 'rain': '🌧️', 'snow': '❄️',
-                        'lightning': '⚡', 'rainbow': '🌈', 'wind': '💨', 'tornado': '🌪️', 'fire': '🔥', 'water': '💧',
-                        'ocean': '🌊', 'earth': '🌍', 'mountain': '⛰️', 'volcano': '🌋', 'desert': '🏜️', 'beach': '🏖️',
-                        'tree': '🌳', 'palm': '🌴', 'forest': '🌲', 'flower': '🌸', 'rose': '🌹', 'tulip': '🌷',
-                        'sunflower': '🌻', 'blossom': '🌺', 'leaf': '🍃', 'grass': '🌱', 'bamboo': '🎋', 'cactus': '🌵',
-                        
-                        // Animals
-                        'cat': '🐱', 'dog': '🐶', 'mouse': '🐭', 'hamster': '🐹', 'rabbit': '🐰', 'fox': '🦊',
-                        'bear': '🐻', 'panda': '🐼', 'koala': '🐨', 'tiger': '🐯', 'lion': '🦁', 'cow': '🐮',
-                        'pig': '🐷', 'monkey': '🐵', 'chicken': '🐔', 'penguin': '🐧', 'bird': '🐦', 'eagle': '🦅',
-                        'duck': '🦆', 'owl': '🦉', 'bat': '🦇', 'wolf': '🐺', 'horse': '🐴', 'unicorn': '🦄',
-                        'bee': '🐝', 'bug': '🐛', 'butterfly': '🦋', 'snail': '🐌', 'spider': '🕷️', 'ant': '🐜',
-                        'fish': '🐟', 'shark': '🦈', 'whale': '🐋', 'dolphin': '🐬', 'octopus': '🐙', 'crab': '🦀',
-                        'snake': '🐍', 'turtle': '🐢', 'frog': '🐸', 'dragon': '🐉', 'dinosaur': '🦕',
-                        
-                        // Food & Drinks
-                        'food': '🍕', 'pizza': '🍕', 'burger': '🍔', 'hotdog': '🌭', 'sandwich': '🥪', 'taco': '🌮',
-                        'burrito': '🌯', 'salad': '🥗', 'soup': '🍲', 'pasta': '🍝', 'rice': '🍚', 'curry': '🍛',
-                        'sushi': '🍣', 'fish': '🐟', 'meat': '🥩', 'chicken': '🍗', 'bacon': '🥓', 'egg': '🍳',
-                        'bread': '🍞', 'croissant': '🥐', 'bagel': '🥯', 'pretzel': '🥨', 'cheese': '🧀', 'milk': '🥛',
-                        'coffee': '☕', 'tea': '🍵', 'beer': '🍺', 'wine': '🍷', 'cocktail': '🍸', 'juice': '🧃',
-                        'cake': '🎂', 'cupcake': '🧁', 'pie': '🥧', 'cookie': '🍪', 'chocolate': '🍫', 'candy': '🍬',
-                        'ice': '🍦', 'donut': '🍩', 'honey': '🍯', 'apple': '🍎', 'banana': '🍌', 'orange': '🍊',
-                        'lemon': '🍋', 'watermelon': '🍉', 'grapes': '🍇', 'strawberry': '🍓', 'cherry': '🍒', 'peach': '🍑',
-                        'pineapple': '🍍', 'coconut': '🥥', 'tomato': '🍅', 'carrot': '🥕', 'corn': '🌽', 'potato': '🥔',
-                        
-                        // Travel & Places
-                        'car': '🚗', 'bus': '🚌', 'train': '🚂', 'plane': '✈️', 'ship': '🚢', 'boat': '⛵', 'bike': '🚴',
-                        'taxi': '🚕', 'truck': '🚛', 'ambulance': '🚑', 'police': '🚓', 'fire': '🚒', 'rocket': '🚀',
-                        'helicopter': '🚁', 'metro': '🚇', 'tram': '🚊', 'scooter': '🛴', 'skateboard': '🛹',
-                        'home': '🏠', 'house': '🏡', 'building': '🏢', 'school': '🏫', 'hospital': '🏥', 'bank': '🏦',
-                        'hotel': '🏨', 'church': '⛪', 'mosque': '🕌', 'temple': '🛕', 'castle': '🏰', 'tower': '🗼',
-                        'bridge': '🌉', 'tent': '⛺', 'park': '🏞️', 'stadium': '🏟️', 'city': '🏙️', 'sunrise': '🌅',
-                        'sunset': '🌇', 'night': '🌃', 'camp': '🏕️', 'factory': '🏭', 'office': '🏢',
-                        
-                        // Objects & Technology
-                        'phone': '📱', 'computer': '💻', 'laptop': '💻', 'keyboard': '⌨️', 'mouse': '🖱️', 'screen': '💻',
-                        'camera': '📷', 'video': '📹', 'tv': '📺', 'radio': '📻', 'headphone': '🎧', 'speaker': '🔊',
-                        'microphone': '🎤', 'watch': '⌚', 'clock': '🕐', 'alarm': '⏰', 'timer': '⏲️', 'calendar': '📅',
-                        'book': '📚', 'notebook': '📓', 'pen': '✒️', 'pencil': '✏️', 'brush': '🖌️', 'crayon': '🖍️',
-                        'paper': '📄', 'envelope': '✉️', 'package': '📦', 'gift': '🎁', 'balloon': '🎈', 'flag': '🏁',
-                        'key': '🔑', 'lock': '🔒', 'unlock': '🔓', 'door': '🚪', 'window': '🪟', 'mirror': '🪞',
-                        'light': '💡', 'candle': '🕯️', 'flashlight': '🔦', 'battery': '🔋', 'plug': '🔌', 'wire': '🔌',
-                        'tool': '🔧', 'hammer': '🔨', 'knife': '🔪', 'gun': '🔫', 'bomb': '💣', 'sword': '⚔️',
-                        'shield': '🛡️', 'bow': '🏹', 'magic': '🪄', 'crystal': '🔮', 'gem': '💎', 'ring': '💍',
-                        'crown': '👑', 'hat': '👒', 'glasses': '👓', 'sunglasses': '🕶️', 'mask': '😷', 'shoe': '👟',
-                        'boot': '👢', 'shirt': '👕', 'dress': '👗', 'coat': '🧥', 'bag': '👜', 'wallet': '👛',
-                        
-                        // Activities & Sports
-                        'music': '🎵', 'song': '🎶', 'dance': '💃', 'party': '🎉', 'celebration': '🎊', 'game': '🎮',
-                        'sport': '⚽', 'football': '🏈', 'basketball': '🏀', 'tennis': '🎾', 'baseball': '⚾', 'golf': '⛳',
-                        'swimming': '🏊', 'running': '🏃', 'cycling': '🚴', 'climbing': '🧗', 'skiing': '⛷️', 'surfing': '🏄',
-                        'fishing': '🎣', 'hunting': '🏹', 'camping': '⛺', 'hiking': '🥾', 'art': '🎨', 'paint': '🎨',
-                        'draw': '✏️', 'write': '✍️', 'read': '📖', 'study': '📚', 'work': '💼', 'job': '👔',
-                        
-                        // Symbols & Others
-                        'money': '💰', 'coin': '🪙', 'dollar': '💵', 'credit': '💳', 'chart': '📈', 'graph': '📊',
-                        'trophy': '🏆', 'medal': '🥇', 'award': '🏅', 'target': '🎯', 'dice': '🎲', 'puzzle': '🧩',
-                        'magic': '✨', 'star': '⭐', 'boom': '💥', 'splash': '💦', 'sweat': '💦', 'drop': '💧',
-                        'bubble': '🫧', 'smoke': '💨', 'speed': '💨', 'hot': '🔥', 'cold': '❄️', 'warm': '☀️',
-                        'yes': '✅', 'no': '❌', 'stop': '🛑', 'go': '🟢', 'warning': '⚠️', 'danger': '☢️',
-                        'help': '🆘', 'info': 'ℹ️', 'question': '❓', 'exclamation': '❗', 'check': '✔️', 'cross': '❌',
-                        'plus': '➕', 'minus': '➖', 'multiply': '✖️', 'divide': '➗', 'equal': '🟰', 'percent': '%',
-                        'new': '🆕', 'free': '🆓', 'cool': '🆒', 'hot': '🆙', 'top': '🔝', 'end': '🔚'
-                    };
-                    return text.toLowerCase().split(' ').map(word => {
-                        const cleanWord = word.replace(/[^\w]/g, '');
-                        return emojiMap[cleanWord] || word;
-                    }).join(' ');
-                },
-                decode: text => text // Simple fallback
-            },
-            'random-letter': {
-                encode: text => {
-                    const letters = 'abcdefghijklmnopqrstuvwxyz';
-                    return text.split(' ').map(word => {
-                        if (word.trim()) {
-                            const randomLetter = letters[Math.floor(Math.random() * letters.length)];
-                            return randomLetter + word;
-                        }
-                        return word;
-                    }).join(' ');
-                },
-                decode: text => text.split(' ').map(word => word.slice(1)).join(' ')
-            },
-            leetspeak: {
-                encode: text => {
-                    const leetMap = {
-                        'a': '4', 'e': '3', 'i': '1', 'o': '0', 's': '5', 't': '7', 'l': '1'
-                    };
-                    return text.toLowerCase().split('').map(char => leetMap[char] || char).join('');
-                },
-                decode: text => {
-                    const reverseLeet = {
-                        '4': 'a', '3': 'e', '1': 'i', '0': 'o', '5': 's', '7': 't'
-                    };
-                    return text.split('').map(char => reverseLeet[char] || char).join('');
-                }
-            },
-            upsidedown: {
-                encode: text => {
-                    const upsideMap = {
-                        'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ', 'g': 'ƃ',
-                        'h': 'ɥ', 'i': 'ᴉ', 'j': 'ɾ', 'k': 'ʞ', 'l': 'l', 'm': 'ɯ', 'n': 'u',
-                        'o': 'o', 'p': 'd', 'q': 'b', 'r': 'ɹ', 's': 's', 't': 'ʇ', 'u': 'n',
-                        'v': 'ʌ', 'w': 'ʍ', 'x': 'x', 'y': 'ʎ', 'z': 'z', '?': '¿', '!': '¡'
-                    };
-                    return text.toLowerCase().split('').map(char => upsideMap[char] || char).reverse().join('');
-                },
-                decode: text => text // Simplified decode
-            },
-            bubble: {
-                encode: text => {
-                    const bubbleMap = {
-                        'a': 'ⓐ', 'b': 'ⓑ', 'c': 'ⓒ', 'd': 'ⓓ', 'e': 'ⓔ', 'f': 'ⓕ', 'g': 'ⓖ',
-                        'h': 'ⓗ', 'i': 'ⓘ', 'j': 'ⓙ', 'k': 'ⓚ', 'l': 'ⓛ', 'm': 'ⓜ', 'n': 'ⓝ',
-                        'o': 'ⓞ', 'p': 'ⓟ', 'q': 'ⓠ', 'r': 'ⓡ', 's': 'ⓢ', 't': 'ⓣ', 'u': 'ⓤ',
-                        'v': 'ⓥ', 'w': 'ⓦ', 'x': 'ⓧ', 'y': 'ⓨ', 'z': 'ⓩ',
-                        '0': '⓪', '1': '①', '2': '②', '3': '③', '4': '④', '5': '⑤',
-                        '6': '⑥', '7': '⑦', '8': '⑧', '9': '⑨'
-                    };
-                    return text.toLowerCase().split('').map(char => bubbleMap[char] || char).join('');
-                },
-                decode: text => {
-                    const reverseBubble = {
-                        'ⓐ': 'a', 'ⓑ': 'b', 'ⓒ': 'c', 'ⓓ': 'd', 'ⓔ': 'e', 'ⓕ': 'f', 'ⓖ': 'g',
-                        'ⓗ': 'h', 'ⓘ': 'i', 'ⓙ': 'j', 'ⓚ': 'k', 'ⓛ': 'l', 'ⓜ': 'm', 'ⓝ': 'n',
-                        'ⓞ': 'o', 'ⓟ': 'p', 'ⓠ': 'q', 'ⓡ': 'r', 'ⓢ': 's', 'ⓣ': 't', 'ⓤ': 'u',
-                        'ⓥ': 'v', 'ⓦ': 'w', 'ⓧ': 'x', 'ⓨ': 'y', 'ⓩ': 'z',
-                        '⓪': '0', '①': '1', '②': '2', '③': '3', '④': '4', '⑤': '5',
-                        '⑥': '6', '⑦': '7', '⑧': '8', '⑨': '9'
-                    };
-                    return text.split('').map(char => reverseBubble[char] || char).join('');
-                }
-            }
+    <div class="input-group">
+      <label for="output-text">Output Text:</label>
+      <textarea id="output-text" placeholder="Converted text will appear here..."></textarea>
+      <div class="controls">
+        <button onclick="copyResult()">Copy Result</button>
+        <button onclick="decryptToInput()">Decrypt to Input</button>
+        <button onclick="clearOutput()">Clear Output</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Made with ❤️ by sauravhhh</div>
+</div>
+
+<script>
+  function toggleTheme() {
+    const body = document.body;
+    const themeToggle = document.querySelector('.theme-toggle');
+    if (body.hasAttribute('data-theme')) {
+      body.removeAttribute('data-theme');
+      themeToggle.textContent = '🌙';
+    } else {
+      body.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️';
+    }
+  }
+
+  let externalEmojiMap = {};
+  fetch('emoji.json').then(res => res.ok ? res.json() : Promise.reject('emoji.json not found')).then(json => externalEmojiMap = json).catch(e => {
+    console.warn(e);
+    externalEmojiMap = {};
+  });
+
+  const builtinEmojiMap = {
+    happy: '😊', sad: '😢', love: '❤️', heart: '❤️', angry: '😠', laugh: '😂',
+    smile: '😄', hello: '👋', thumbs: '👍', fire: '🔥', star: '⭐',
+    cool: '😎', wink: '😉', cry: '😭', excited: '🤩', clap: '👏', pray: '🙏',
+    kiss: '😘', peace: '✌️', good: '👍', bad: '👎'
+  };
+
+  const encoders = {
+    binary: {
+      encode: (text) => text.split('').map(c => c.charCodeAt(0).toString(2).padStart(8, '0')).join(' '),
+      decode: (bin) => bin.split(' ').map(b => String.fromCharCode(parseInt(b, 2))).join('')
+    },
+    morse: {
+      encode: (text) => {
+        const morseCode = {A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.',' ':'/'};
+        return text.toUpperCase().split('').map(c => morseCode[c] || c).join(' ');
+      },
+      decode: (morse) => {
+        const morseReverse = {'.-':'A', '-...':'B', '-.-.':'C', '-..':'D', '.':'E', '..-.':'F', '--.':'G', '....':'H', '..':'I', '.---':'J', '-.-':'K', '.-..':'L', '--':'M', '-.':'N', '---':'O', '.--.':'P', '--.-':'Q', '.-.':'R', '...':'S', '-':'T', '..-':'U', '...-':'V', '.--':'W', '-..-':'X', '-.--':'Y', '--..':'Z', '-----':'0', '.----':'1', '..---':'2', '...--':'3', '....-':'4', '.....':'5', '-....':'6', '--...':'7', '---..':'8', '----.':'9', '/':' '};
+        return morse.split(' ').map(c => morseReverse[c] || c).join('');
+      }
+    },
+    braille: {
+      encode: (text) => {
+        const brailleMap = {
+          a:'⠁',b:'⠃',c:'⠉',d:'⠙',e:'⠑',f:'⠋',g:'⠛',
+          h:'⠓',i:'⠊',j:'⠚',k:'⠅',l:'⠇',m:'⠍',n:'⠝',
+          o:'⠕',p:'⠏',q:'⠟',r:'⠗',s:'⠎',t:'⠞',u:'⠥',
+          v:'⠧',w:'⠺',x:'⠭',y:'⠽',z:'⠵',' ':'⠀'
         };
+        return text.toLowerCase().split('').map(c => brailleMap[c] || c).join('');
+      },
+      decode: (text) => {
+        const brailleReverse = {
+          '⠁':'a', '⠃':'b', '⠉':'c', '⠙':'d', '⠑':'e', '⠋':'f', '⠛':'g',
+          '⠓':'h', '⠊':'i', '⠚':'j', '⠅':'k', '⠇':'l', '⠍':'m', '⠝':'n',
+          '⠕':'o', '⠏':'p', '⠟':'q', '⠗':'r', '⠎':'s', '⠞':'t', '⠥':'u',
+          '⠧':'v', '⠺':'w', '⠭':'x', '⠽':'y', '⠵':'z', '⠀':' '
+        };
+        return text.split('').map(c => brailleReverse[c] || c).join('');
+      }
+    },
+    reverse: {
+      encode: (text) => text.split('').reverse().join(''),
+      decode: (text) => text.split('').reverse().join('')
+    },
+    upsidedown: {
+      encode: (text) => {
+        const upsidedownMap = {
+          a:'ɐ',b:'q',c:'ɔ',d:'p',e:'ǝ',f:'ɟ',g:'ɓ',h:'ɥ',i:'ᴉ',j:'ɾ',k:'ʞ',l:'ʃ',m:'ɯ',
+          n:'u',o:'o',p:'d',q:'b',r:'ɹ',s:'s',t:'ʇ',u:'n',v:'ʌ',w:'ʍ',x:'x',y:'ʎ',z:'z',
+          A:'∀',B:'𐐒',C:'Ɔ',D:'ᗡ',E:'Ǝ',F:'Ⅎ',G:'⅁',H:'H',I:'I',J:'ſ',K:'ʞ',L:'˥',
+          M:'W',N:'N',O:'O',P:'Ԁ',Q:'Ό',R:'ᴚ',S:'S',T:'⊥',U:'∩',V:'Λ',W:'M',X:'X',
+          Y:'⅄',Z:'Z', '1':'Ɩ','2':'ᄅ','3':'Ɛ','4':'ㄣ','5':'ϛ','6':'9','7':'ㄥ','8':'8','9':'6',
+          '.':'˙',',':'\'','?':'¿','!':'¡','"':',,','\'':',','(' : ')', ')' : '(',
+          '[' : ']', ']' : '[', '{' : '}', '}' : '{', '<' : '>', '>' : '<',
+        };
+        return text.split('').reverse().map(c => upsidedownMap[c] || c).join('');
+      },
+      decode: (text) => encoders.upsidedown.encode(text)
+    },
+    base64: {
+      encode: (text) => btoa(text),
+      decode: (str) => { try { return atob(str); } catch { return 'Invalid Base64'; } }
+    },
+    hex: {
+      encode: (text) => text.split('').map(c => c.charCodeAt(0).toString(16).padStart(2,'0')).join(' '),
+      decode: (text) => text.split(' ').map(h => String.fromCharCode(parseInt(h,16))).join('')
+    },
+    url: {
+      encode: (text) => encodeURIComponent(text),
+      decode: (text) => decodeURIComponent(text)
+    },
+    ascii: {
+      encode: (text) => text.split('').map(c => c.charCodeAt(0)).join(' '),
+      decode: (text) => text.split(' ').map(code => String.fromCharCode(parseInt(code))).join('')
+    },
+    rot13: {
+      encode: (text) => text.replace(/[a-zA-Z]/g, c => {
+        const base = c <= 'Z' ? 65 : 97;
+        return String.fromCharCode((c.charCodeAt(0)-base+13)%26+base);
+      }),
+      decode: (text) => encoders.rot13.encode(text)
+    },
+    emoji: {
+      encode: (text) => {
+        return text.split(' ').map(word => {
+          const cleanWord = word.toLowerCase().replace(/[^\w]/g, '');
+          return builtinEmojiMap[cleanWord] || externalEmojiMap[cleanWord] || word;
+        }).join(' ');
+      },
+      decode: (text) => text // no decode for emoji
+    },
+    'random-letter': {
+      encode: (text) => {
+        const letters = 'abcdefghijklmnopqrstuvwxyz';
+        return text.split(' ').map(word => {
+          if(word.trim().length > 0) {
+            const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+            return randomLetter + word;
+          }
+          return word;
+        }).join(' ');
+      },
+      decode: (text) => {
+        return text.split(' ').map(word => (word.length > 1) ? word.slice(1) : word).join(' ');
+      }
+    },
+    'leetspeak': {
+      encode: (text) => text.toLowerCase()
+        .replace(/a/g,'4').replace(/e/g,'3')
+        .replace(/i/g,'1').replace(/o/g,'0')
+        .replace(/s/g,'5').replace(/t/g,'7'),
+      decode: (text) => text.toLowerCase()
+        .replace(/4/g,'a').replace(/3/g,'e')
+        .replace(/1/g,'i').replace(/0/g,'o')
+        .replace(/5/g,'s').replace(/7/g,'t')
+    },
+    bubble: {
+      encode: (text) => {
+        const bubbleMap = {
+          a:'ⓐ',b:'ⓑ',c:'ⓒ',d:'ⓓ',e:'ⓔ',f:'ⓕ',g:'ⓖ',h:'ⓗ',i:'ⓘ',j:'ⓙ',k:'ⓚ',
+          l:'ⓛ',m:'ⓜ',n:'ⓝ',o:'ⓞ',p:'ⓟ',q:'ⓠ',r:'ⓡ',s:'ⓢ',t:'ⓣ',u:'ⓤ',v:'ⓥ',
+          w:'ⓦ',x:'ⓧ',y:'ⓨ',z:'ⓩ',
+          A:'Ⓐ',B:'Ⓑ',C:'Ⓒ',D:'Ⓓ',E:'Ⓔ',F:'Ⓕ',G:'Ⓖ',H:'Ⓗ',I:'Ⓘ',J:'Ⓙ',K:'Ⓚ',
+          L:'Ⓛ',M:'Ⓜ',N:'Ⓝ',O:'Ⓞ',P:'Ⓟ',Q:'Ⓠ',R:'Ⓡ',S:'Ⓢ',T:'Ⓣ',U:'Ⓤ',V:'Ⓥ',
+          W:'Ⓦ',X:'Ⓧ',Y:'Ⓨ',Z:'Ⓩ'
+        };
+        return text.split('').map(c => bubbleMap[c] || c).join('');
+      },
+      decode: (text) => {
+        const reverseMap = {};
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(c => {
+          const bubble = encoders.bubble.encode(c);
+          reverseMap[bubble] = c;
+        });
+        return text.split('').map(c => reverseMap[c] || c).join('');
+      }
+    }
+  };
 
+  function convertText() {
+    const input = document.getElementById('input-text').value;
+    const output = document.getElementById('output-text');
+    const encodingType = document.getElementById('encoding-type').value;
+    if (!input) {
+      alert('Please enter text to convert.');
+      return;
+    }
+    try {
+      output.value = encoders[encodingType].encode(input);
+    } catch {
+      output.value = 'Encoding failed';
+    }
+  }
 
+  function interchangeBoxes() {
+    const inputBox = document.getElementById('input-text');
+    const outputBox = document.getElementById('output-text');
+    const temp = inputBox.value;
+    inputBox.value = outputBox.value;
+    outputBox.value = temp;
+  }
 
-        function convertText() {
-            const input = document.getElementById('input-text').value;
-            const encodingType = document.getElementById('encoding-type').value;
-            const output = document.getElementById('output-text');
-            
-            if (input.length === 0) {
-                output.value = '';
-                return;
-            }
-            
-            try {
-                output.value = encoders[encodingType].encode(input);
-            } catch (error) {
-                output.value = 'Conversion error';
-            }
-        }
+  function clearInput() {
+    document.getElementById('input-text').value = '';
+  }
 
-        function reverseConvert() {
-            const input = document.getElementById('output-text').value;
-            const encodingType = document.getElementById('encoding-type').value;
-            const output = document.getElementById('input-text');
-            
-            if (input.length === 0) {
-                output.value = '';
-                return;
-            }
-            
-            try {
-                output.value = encoders[encodingType].decode(input);
-            } catch (error) {
-                output.value = 'Reverse conversion error';
-            }
-        }
+  function clearOutput() {
+    document.getElementById('output-text').value = '';
+  }
 
-        function decryptToInput() {
-            const output = document.getElementById('output-text').value;
-            const encodingType = document.getElementById('encoding-type').value;
-            const input = document.getElementById('input-text');
-            
-            if (output.length === 0) {
-                input.value = '';
-                return;
-            }
-            
-            try {
-                input.value = encoders[encodingType].decode(output);
-            } catch (error) {
-                input.value = 'Decode error';
-            }
-        }
+  function copyResult() {
+    const outputBox = document.getElementById('output-text');
+    outputBox.select();
+    outputBox.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(outputBox.value).then(() => {
+      alert('Copied to clipboard!');
+    }).catch(() => {
+      alert('Copy failed. Please copy manually.');
+    });
+  }
 
-        function copyResult() {
-            const output = document.getElementById('output-text');
-            output.select();
-            document.execCommand('copy');
-            
-            // Visual feedback
-            const button = event.target;
-            const originalText = button.textContent;
-            button.textContent = 'Copied!';
-            setTimeout(() => {
-                button.textContent = originalText;
-            }, 1000);
-        }
+  function decryptToInput() {
+    const inputBox = document.getElementById('input-text');
+    const outputBox = document.getElementById('output-text');
+    const encodingType = document.getElementById('encoding-type').value;
 
-        function clearInput() {
-            document.getElementById('input-text').value = '';
-        }
-
-        function clearOutput() {
-            document.getElementById('output-text').value = '';
-        }
-
-        function interchangeBoxes() {
-            const input = document.getElementById('input-text');
-            const output = document.getElementById('output-text');
-            
-            const temp = input.value;
-            input.value = output.value;
-            output.value = temp;
-        }
-
-
-    </script>
+    if (!encoders[encodingType].decode) {
+      alert('Decoding not supported for this encoding.');
+      return;
+    }
+    try {
+      inputBox.value = encoders[encodingType].decode(outputBox.value);
+      clearOutput();
+    } catch {
+      alert('Decoding failed.');
+    }
+  }
+</script>
 </body>
 </html>
