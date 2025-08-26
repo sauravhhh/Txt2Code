@@ -1,0 +1,14 @@
+{
+  "happy": "😊",
+  "sad": "😢",
+  "love": "❤️",
+  "heart": "❤️",
+  "angry": "😠",
+  "laugh": "😂",
+  "smile": "😄",
+  "hello": "👋",
+  "thumbs": "👍",
+  "fire": "🔥",
+  "star": "⭐"
+  // add more emoji mappings here as needed
+}
